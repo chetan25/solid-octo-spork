@@ -29,6 +29,9 @@
     "todos-management-e2e": {
       "tags": [],
       "implicitDependencies": ["todos-management"]
+    },
+    "ui": {
+      "tags": []
     }
   }
 }
