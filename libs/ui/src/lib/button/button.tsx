@@ -6,16 +6,17 @@ export interface ButtonProps {
   ariaLabel?: string;
   ariaDescribedby?: string;
   onClick?: () => void;
+  disabled?: boolean;
 }
 
 const Button = (props: ButtonProps) => {
-  const {children, ariaLabel, ariaDescribedby, onClick } = props;
-  return <ButtonComponent onClick={onClick} aria-label={ariaLabel} aria-describedby={ariaDescribedby}>{children}</ButtonComponent>
+  const {children, ariaLabel, ariaDescribedby, onClick, disabled } = props;
+  return <ButtonComponent disabled={ disabled } onClick={onClick} aria-label={ariaLabel} aria-describedby={ariaDescribedby}>{children}</ButtonComponent>
 };
 
 const InverseButton = (props: ButtonProps) => {
-  const {children, ariaLabel} = props;
-  return <InverseButtonComponent aria-label={ariaLabel}>{children}</InverseButtonComponent>
+  const {children, ariaLabel, onClick} = props;
+  return <InverseButtonComponent aria-label={ariaLabel} onClick={onClick}>{children}</InverseButtonComponent>
 };
 
 const IconButton = (props: ButtonProps) => {

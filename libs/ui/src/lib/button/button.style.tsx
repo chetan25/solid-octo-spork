@@ -5,6 +5,8 @@ interface ButtonAttributes {
   type?: string;
   'aria-label'?: string;
   'aria-describedby'?: string;
+  onClick?: () => void;
+  disabled?: boolean;
 }
 // type StyledButton = Omit<
 //   JSX.IntrinsicElements["button"],
@@ -30,6 +32,9 @@ export const ButtonComponent = styled.button<ButtonAttributes>`
   &:focus {
     outline: 1px solid var(--primary-color, blue);
     box-shadow: 2px 2px grey;
+  }
+  &:disabled  {
+   background: grey;
   }
 `;
 

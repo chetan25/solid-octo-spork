@@ -1,9 +1,16 @@
-import { ADD_TODO, FETCH_TODO_SUCCESS, FETCH_TODO } from './todo-actions';
+import {
+  ADD_TODO,
+  FETCH_TODO_SUCCESS,
+  FETCH_TODO,
+  ADD_TODO_SUCCESS,
+  ADD_TODO_ERROR
+} from './todo-actions';
 import { ITodosState } from '../../interfaces/user';
 
 const defaultState: ITodosState = {
     todos: [],
     isFetching: false,
+    isProcessing: false,
     hasError: false
 }
 
@@ -14,10 +21,24 @@ export interface IAction {
 
 const todoReducer = (state: ITodosState = defaultState, action: IAction): ITodosState => {
     switch (action.type) {
-        case ADD_TODO:
+        case ADD_TODO_SUCCESS:
             return {
                 ...state,
-                todos: [...state.todos, action.payload]
+                isProcessing: false,
+                hasError: false
+            }
+        case ADD_TODO_ERROR:
+            return {
+              ...state,
+              isProcessing: false,
+              hasError: true
+            }
+        case ADD_TODO:
+            return {
+              ...state,
+              todos: [...state.todos, action.payload],
+              hasError: false,
+              isProcessing: true
             }
         case FETCH_TODO:
             return {

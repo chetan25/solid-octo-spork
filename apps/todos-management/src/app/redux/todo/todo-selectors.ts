@@ -12,3 +12,14 @@ export const selectIsFetching = createSelector(
     [selectorTodos],
     (todos: ITodosState): boolean|undefined => todos.isFetching
 );
+
+export const selectHasError = createSelector(
+  [selectorTodos],
+  (todos: ITodosState): boolean|undefined => todos.hasError
+);
+
+export const selectIsProcessing = createSelector(
+  [selectorTodos],
+  (todos: ITodosState): boolean|undefined => todos.isProcessing
+);
+

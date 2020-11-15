@@ -7,13 +7,18 @@ import { BrowserRouter } from 'react-router-dom';
 import { Provider } from 'react-redux';
 import { store, persistor } from './app/redux/store';
 import { PersistGate} from "redux-persist/integration/react";
+import { QueryCache, ReactQueryCacheProvider } from 'react-query'
+
+const queryCache = new QueryCache();
 
 ReactDOM.render(
   <React.StrictMode>
     <Provider store={store}>
       <BrowserRouter>
         <PersistGate persistor={persistor}>
+          <ReactQueryCacheProvider queryCache={queryCache}>
           <App />
+          </ReactQueryCacheProvider>
         </PersistGate>
       </BrowserRouter>
     </Provider>

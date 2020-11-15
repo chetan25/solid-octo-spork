@@ -16,7 +16,8 @@ export interface IUserState {
 export interface ITodosState {
     todos: ITodo[] | [];
     isFetching?: boolean;
-    hasError?: boolean
+    hasError?: boolean;
+    isProcessing?: boolean;
 }
 
 export interface IStore {

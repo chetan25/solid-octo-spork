@@ -12,7 +12,6 @@ export const useTabTrapHook = (parentId: string, firstFocusNodeIndex: number) =>
 
     // Convert NodeList to Array
     focusableElements = Array.prototype.slice.call(focusableElements);
-    console.log(focusableElements, 'focusableElements');
     firstFocusEl = focusableElements[0];
     lastFocusEl = focusableElements[focusableElements.length - 1];
 
