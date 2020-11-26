@@ -7,6 +7,7 @@ import {Dispatch} from "redux";
 import { checkUserSession, setCurrentUser } from "./redux/user/user-actions";
 import { userSelector } from "./redux/user/user-selectors";
 import { IUser, IStore } from './interfaces/user';
+import styled from 'styled-components';
 
 import { Spinner, ErrorBoundary } from '@cd-workspace/ui';
 
@@ -28,6 +29,9 @@ interface PrivateRouteProps {
   exact?: boolean;
 }
 
+const PageSpinner = styled(Spinner)`
+ height: 100vh;
+`;
 // A wrapper for <Route> that redirects to the login
 // screen if you're not yet authenticated.
 const PrivateRoute = ({ children, currentUser, path, exact = false }: PrivateRouteProps) => {
@@ -69,7 +73,7 @@ class App extends Component<AppProps> {
     console.log(currentUser, 'currentUser');
     return (
       <div>
-        { this.props.pageLoading ? <Spinner /> :
+        { this.props.pageLoading ? <PageSpinner /> :
           <Switch>
             <ErrorBoundary>
               <Suspense fallback={<Spinner />}>

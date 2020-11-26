@@ -23,3 +23,8 @@ export const selectIsProcessing = createSelector(
   (todos: ITodosState): boolean|undefined => todos.isProcessing
 );
 
+
+export const selectAddSuccess = createSelector(
+  [selectorTodos],
+  (todos: ITodosState): boolean|undefined => todos.addSuccess
+);

@@ -6,12 +6,20 @@ interface CardProp {
   role?: string;
   ariaLabelledby?: string;
   ariaDescribedby?: string;
+  ariaLabel?: string;
+  className?: string;
 }
 
 const Card = (prop: CardProp) => {
-  const { children, role, ariaLabelledby, ariaDescribedby } = prop;
+  const { children, role, ariaLabelledby, ariaDescribedby, ariaLabel, className } = prop;
 
-  return <CardWrapper role={role} aria-labelledby={ariaLabelledby} aria-describedby={ariaDescribedby}>{children}</CardWrapper>
+  return <CardWrapper
+    role={role}
+    aria-label={ariaLabel}
+    aria-labelledby={ariaLabelledby}
+    aria-describedby={ariaDescribedby}
+    className={className}
+  >{children}</CardWrapper>
 }
 
 interface TitleProps {
@@ -28,12 +36,13 @@ const CardTitle = (props: TitleProps) => {
 interface FooterProps {
   children?: React.ReactNode;
   id?: string;
+  className?: string;
 }
 
 const CardFooter = (props: FooterProps) => {
-  const { children, id} = props;
+  const { children, id, className} = props;
 
-  return <StyledFooter id={id}>{children}</StyledFooter>
+  return <StyledFooter id={id} className={className}>{children}</StyledFooter>
 }
 
 interface BodyProps {

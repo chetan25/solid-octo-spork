@@ -18,6 +18,7 @@ export interface ITodosState {
     isFetching?: boolean;
     hasError?: boolean;
     isProcessing?: boolean;
+    addSuccess?: boolean;
 }
 
 export interface IStore {
@@ -26,9 +27,9 @@ export interface IStore {
 }
 
 export interface ITodo {
-    userId: string;
-    date: string;
-    todoId: string;
-    title: string;
-    description: string;
+  id?: string;
+  title: string;
+  description: string;
+  endGoal?: string;
+  actions?: string;
 }

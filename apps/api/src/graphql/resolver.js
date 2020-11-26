@@ -7,7 +7,12 @@ module.exports = {
   },
   addTodo(args, req) {
     const { addTodo } = args;
-    return axios.post('http://localhost:3000/todos', {title: addTodo.title, author: addTodo.author})
+    return axios.post('http://localhost:3000/todos', {
+      title: addTodo.title,
+      description: addTodo.description,
+      endGoal: addTodo.endGoal,
+      actions: addTodo.actions
+    })
       .then(res => res.data);
   }
 }

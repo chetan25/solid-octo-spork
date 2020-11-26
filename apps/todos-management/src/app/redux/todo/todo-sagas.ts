@@ -21,11 +21,17 @@ export function* fetchTodosSaga() {
     );
 }
 
-export function* addTodoAsync() {
+function addTodoDummy() {
+  setTimeout(() => addTodo({title: 'test', description: 'test'}));
+}
+
+export function* addTodoAsync(payload) {
   try {
-    const { todo } = yield call(addTodo, {title: 'test', author: 'test'});
+    console.log(payload, 'payload');
+    const { payload: newTodo } = payload;
+    const { todo } = yield call(addTodo, newTodo);
     console.log(todo);
-    yield put(addTodoError());
+    yield put(addTodoSuccess());
   } catch(err) {
     console.log(err);
     yield put(addTodoError());

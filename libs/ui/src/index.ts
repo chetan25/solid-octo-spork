@@ -12,3 +12,5 @@ export { default as Drawer } from './lib/drawer/drawer';
 export { useTabTrapHook } from './lib//utils/TabTrapHook';
 export { default as Input } from './lib/input/input';
 export { default as Label } from './lib/label/label';
+export { default as Banner } from './lib/banner/banner';
+export { default as CloseIcon } from './lib/icons/close-icon';

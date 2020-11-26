@@ -4,11 +4,15 @@ module.exports = buildSchema(`
    type Todos {
      id: String!
      title: String!
-     author: String!
+     description: String!
+     endGoal: String
+     actions: String
    }
    input AddTodoData {
      title: String!
-     author: String!
+     description: String!
+     endGoal: String
+     actions: String
    }
    type RootQuery {
      todos: [Todos]

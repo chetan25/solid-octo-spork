@@ -5,7 +5,7 @@ interface ButtonAttributes {
   type?: string;
   'aria-label'?: string;
   'aria-describedby'?: string;
-  onClick?: () => void;
+  onClick?: <T>(T) => void;
   disabled?: boolean;
 }
 // type StyledButton = Omit<

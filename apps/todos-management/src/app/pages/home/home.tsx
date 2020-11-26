@@ -5,12 +5,13 @@ import { useDispatch } from 'react-redux';
 import { useSelector } from "react-redux";
 import {
   Header, Spinner,
-  Button, InverseButton, IconButton,
-  Card, CardBody,
-  Drawer, Input, Label
+  Button, InverseButton,
+  Card, CardBody, CardFooter, Drawer
 } from '@cd-workspace/ui';
+import AddTodoModal from '../../components/add-todo-modal';
 import { fetchTodos, addTodo } from '../../redux/todo/todo-actions';
-import { selectTodos, selectIsFetching, selectHasError, selectIsProcessing } from "../../redux/todo/todo-selectors";
+import { ITodo } from '../../interfaces/user';
+import { selectTodos, selectIsFetching, selectHasError, selectIsProcessing, selectAddSuccess } from "../../redux/todo/todo-selectors";
 // import {
 //   useQuery,
 // } from "react-query";
@@ -34,122 +35,68 @@ const NoTodoWrapper = styled.div`
   }
 `;
 
-const FormWrapper = styled.form<{children: React.ReactNode}>`
- margin: 2rem;
- display: grid;
- grid-gap: 2rem;
+// const ErrorBanner = styled.div`
+//    display: block;
+//     min-height: 1rem;
+//     background: #e22323;
+//     padding: 1rem;
+//     text-align: center;
+//     margin-top: 1rem;
+//     border-radius: 25px;
+//
+//     animation: fadeIn ease 1s;
+//     -webkit-animation: fadeIn ease 1s;
+//     -moz-animation: fadeIn ease 1s;
+//     -o-animation: fadeIn ease 1s;
+//     -ms-animation: fadeIn ease 1s;
+//
+//     @keyframes fadeIn {
+//       0% {opacity:0;}
+//       100% {opacity:1;}
+//     }
+//
+//     @-moz-keyframes fadeIn {
+//       0% {opacity:0;}
+//       100% {opacity:1;}
+//     }
+//
+//     @-webkit-keyframes fadeIn {
+//       0% {opacity:0;}
+//       100% {opacity:1;}
+//     }
+// `;
 
- label {
-   margin-right: 1rem;
- }
- fieldset {
-   border: none;
- }
- fieldset > div {
-    margin-top: 2rem;
-    display: grid;
-    grid-template-columns: 1fr 3fr;
- }
-`;
-
-const DrawerTitle = styled.div<{children: React.ReactNode}>`
-  min-height: 2rem;
-  border-bottom: 1px solid grey;
-  text-align: center;
-`;
-
-const CloseButton = styled.div`
-  --icon-btn-size: 1rem;
-  position: absolute;
-  top: 0;
-  right: 0;
-   padding: 1rem;
-`;
-
-const SubmitFormButton = styled.div`
-    margin-top: 3rem;
-    display: flex;
-    align-content: center;
-    justify-content: center;
-`;
-
-const ErrorBanner = styled.div`
-   display: block;
-    min-height: 1rem;
-    background: #e22323;
+const CardWrapper = styled(Card)`
+    min-height: 10rem;
+    background: #e06767;
+    color: black;
+    font-weight: bold;
+    font-size: 20px;
+    margin: 2rem;
     padding: 1rem;
-    text-align: center;
-    margin-top: 1rem;
-    border-radius: 25px;
-
-    animation: fadeIn ease 1s;
-    -webkit-animation: fadeIn ease 1s;
-    -moz-animation: fadeIn ease 1s;
-    -o-animation: fadeIn ease 1s;
-    -ms-animation: fadeIn ease 1s;
-
-    @keyframes fadeIn {
-      0% {opacity:0;}
-      100% {opacity:1;}
-    }
-
-    @-moz-keyframes fadeIn {
-      0% {opacity:0;}
-      100% {opacity:1;}
-    }
-
-    @-webkit-keyframes fadeIn {
-      0% {opacity:0;}
-      100% {opacity:1;}
-    }
+    width: auto;
 `;
 
-const drawerContent = (closeDrawer, addNewTodo, hasError, isProcessing) => {
-    return (
-       <>
-         <DrawerTitle>
-           <div>
-             <h2>Add a new Todo</h2>
-             <CloseButton>
-               <IconButton onClick={!isProcessing ? closeDrawer : null}>X</IconButton>
-             </CloseButton>
-           </div>
-         </DrawerTitle>
-         <FormWrapper>
-           <fieldset disabled={isProcessing}>
-             <div>
-               <Label htmlFor="firstname">First name:</Label>
-               <Input type="text" name="firstname" id="firstname" />
-             </div>
-             <div>
-               <Label htmlFor="lastname">Last name:</Label>
-               <Input type="text" name="lastname" id="lastname" />
-             </div>
-             <div>
-               <Label htmlFor="age">Age:</Label>
-               <Input type="text" name="age" id="age" />
-             </div>
-             <div>
-               <Label htmlFor="address">Address:</Label>
-               <Input type="text" name="address" id="address" />
-             </div>
-           </fieldset>
-         </FormWrapper>
-         <SubmitFormButton>
-           <Button
-             ariaLabel='Submit New Todo Form Data'
-             onClick={addNewTodo}
-             disabled={isProcessing || hasError}
-           >
-             Add New Todo
-           </Button>
-         </SubmitFormButton>
-           {
-             hasError ? <ErrorBanner>Sorry there was an error adding todo.</ErrorBanner> : null
-           }
-       </>
-    );
-}
+const CardHeader = styled.div`
+    font-size: 30px;
+    border-bottom: 1px solid black;
+`;
+
+const CardSection = styled.div`
+  margin-top: 1rem;
+  font-weight: 500;
+`;
+
+const CardFooterWrapper = styled(CardFooter)`
+  border: none;
+  text-align: end;
+`;
+
+const AddButtonWrapper = styled.div`
+  display: flex;
+  justify-content: center;
+  padding-top: 2rem;
+`;
 
 export const Home = () => {
     // The `path` lets us build <Route> paths that are
@@ -158,9 +105,11 @@ export const Home = () => {
     let { path, url } = useRouteMatch();
     const dispatch = useDispatch();
     const isFetching = useSelector(selectIsFetching);
-    const hsError = useSelector(selectHasError);
+    const hasError = useSelector(selectHasError);
     const isProcessing = useSelector(selectIsProcessing);
+    const addSuccessFull = useSelector(selectAddSuccess);
     const todos = useSelector(selectTodos);
+    console.log(todos, 'todos present');
 
     const [isOpened, setIsOpened] = useState(false);
 
@@ -171,14 +120,12 @@ export const Home = () => {
       dispatch(fetchTodos());
     }, []);
 
-    const addNewTodo = () => {
-      dispatch(addTodo({
-        userId: '1',
-        date: '1',
-        todoId: '1',
-        title: '1',
-        description: '1'
-      }));
+    const addNewTodo = (todo: ITodo) => {
+      dispatch(addTodo(todo));
+    };
+
+    const deleteTodo = (id: string) => {
+
     };
 
     const renderContent = () => {
@@ -186,8 +133,28 @@ export const Home = () => {
         {
           todos.length > 0 ?
             <>
-              <h3>This is Home</h3>
-              <div>To go to Details click <Link to={`${url}details/111`}>Components</Link></div>
+              <AddButtonWrapper>
+                <Button ariaLabel='Add New Todo' ariaDescribedby='no-todo-message' onClick={() => setIsOpened(true)}>
+                  Add New Todo
+                </Button>
+              </AddButtonWrapper>
+              {
+                todos.map((todo: ITodo, key) => {
+                  return (
+                    <CardWrapper key={key} ariaLabel={todo.title}>
+                      <CardBody>
+                        <CardHeader>{todo.title}</CardHeader>
+                        <CardSection>Description - {todo.description}</CardSection>
+                        <CardSection>Actions - {todo.actions}</CardSection>
+                        <CardSection>End Goal - {todo.endGoal}</CardSection>
+                      </CardBody>
+                      <CardFooterWrapper>
+                        <Button onClick={(todo) => deleteTodo(todo.id)}>Delete</Button>
+                      </CardFooterWrapper>
+                    </CardWrapper>
+                  )
+                })
+              }
             </> :
             <NoTodoWrapper>
              <>
@@ -199,7 +166,7 @@ export const Home = () => {
                      <InverseButton
                        ariaLabel='Add Todo Button in Card'
                        ariaDescribedby='no-todo-message'
-                       onClick={addNewTodo}
+                       onClick={() => setIsOpened(true)}
                      >
                        Add Todo
                      </InverseButton>
@@ -220,7 +187,13 @@ export const Home = () => {
             slide='right'
             onClose={!isProcessing ? closeDrawer : null}
           >
-            {drawerContent(closeDrawer, addNewTodo, hsError, isProcessing)}
+            <AddTodoModal
+              closeDrawer={closeDrawer}
+              addNewTodo={addNewTodo}
+              hasError={hasError}
+              isProcessing={isProcessing}
+              addSuccessFull={addSuccessFull}
+            />
           </Drawer> : null
         }
       </>;

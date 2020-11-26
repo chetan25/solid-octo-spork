@@ -5,7 +5,7 @@ export interface ButtonProps {
   children: React.ReactNode;
   ariaLabel?: string;
   ariaDescribedby?: string;
-  onClick?: () => void;
+  onClick?: <T>(T) => void;
   disabled?: boolean;
 }
 

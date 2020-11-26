@@ -11,7 +11,8 @@ const defaultState: ITodosState = {
     todos: [],
     isFetching: false,
     isProcessing: false,
-    hasError: false
+    hasError: false,
+    addSuccess: false,
 }
 
 export interface IAction {
@@ -25,12 +26,14 @@ const todoReducer = (state: ITodosState = defaultState, action: IAction): ITodos
             return {
                 ...state,
                 isProcessing: false,
-                hasError: false
+                hasError: false,
+                addSuccess: true
             }
         case ADD_TODO_ERROR:
             return {
               ...state,
               isProcessing: false,
+              addSuccess: false,
               hasError: true
             }
         case ADD_TODO:
@@ -38,6 +41,7 @@ const todoReducer = (state: ITodosState = defaultState, action: IAction): ITodos
               ...state,
               todos: [...state.todos, action.payload],
               hasError: false,
+              addSuccess: false,
               isProcessing: true
             }
         case FETCH_TODO:
