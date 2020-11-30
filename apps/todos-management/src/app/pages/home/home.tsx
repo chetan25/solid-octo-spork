@@ -9,9 +9,9 @@ import {
   Card, CardBody, CardFooter, Drawer
 } from '@cd-workspace/ui';
 import AddTodoModal from '../../components/add-todo-modal';
-import { fetchTodos, addTodo } from '../../redux/todo/todo-actions';
+import { fetchTodos, addTodo, resetFormState, deleteTodo } from '../../redux/todo/todo-actions';
 import { ITodo } from '../../interfaces/user';
-import { selectTodos, selectIsFetching, selectHasError, selectIsProcessing, selectAddSuccess } from "../../redux/todo/todo-selectors";
+import { selectTodos, selectIsFetching, selectHasError, selectIsProcessing, selectAddSuccess, selectIsDeleting } from "../../redux/todo/todo-selectors";
 // import {
 //   useQuery,
 // } from "react-query";
@@ -98,6 +98,43 @@ const AddButtonWrapper = styled.div`
   padding-top: 2rem;
 `;
 
+
+const DeleteSpinnerWrapper = styled.div`
+    height: 100vh;
+    z-index: 200;
+    position: fixed;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0,0,0,0.5);
+`;
+
+const DeletingSpinner =  styled.div`
+    border: 16px solid #f3f3f3;
+    border-radius: 50%;
+    border-top: 16px solid blue;
+    border-right: 16px solid green;
+    border-bottom: 16px solid red;
+    width: 120px;
+    height: 120px;
+     animation: spin 2s linear infinite;
+    -webkit-animation: spin 2s linear infinite;
+
+    @-webkit-keyframes spin {
+       0% { -webkit-transform: rotate(0deg); }
+       100% { -webkit-transform: rotate(360deg); }
+    }
+
+   @keyframes spin {
+      0% { transform: rotate(0deg); }
+     100% { transform: rotate(360deg); }
+  }
+`;
+
 export const Home = () => {
     // The `path` lets us build <Route> paths that are
     // relative to the parent route, while the `url` lets
@@ -107,6 +144,7 @@ export const Home = () => {
     const isFetching = useSelector(selectIsFetching);
     const hasError = useSelector(selectHasError);
     const isProcessing = useSelector(selectIsProcessing);
+    const isDeleting = useSelector(selectIsDeleting);
     const addSuccessFull = useSelector(selectAddSuccess);
     const todos = useSelector(selectTodos);
     console.log(todos, 'todos present');
@@ -114,6 +152,7 @@ export const Home = () => {
     const [isOpened, setIsOpened] = useState(false);
 
     const closeDrawer = () => {
+      dispatch(resetFormState());
       setIsOpened(false);
     }
     useEffect(() => {
@@ -124,8 +163,9 @@ export const Home = () => {
       dispatch(addTodo(todo));
     };
 
-    const deleteTodo = (id: string) => {
-
+    const deleteTodoItem = (id: string) => {
+      dispatch(deleteTodo(id));
+      console.log(id);
     };
 
     const renderContent = () => {
@@ -134,7 +174,7 @@ export const Home = () => {
           todos.length > 0 ?
             <>
               <AddButtonWrapper>
-                <Button ariaLabel='Add New Todo' ariaDescribedby='no-todo-message' onClick={() => setIsOpened(true)}>
+                <Button ariaLabel='Add New Todo' ariaDescribedby='no-todo-message' handleClick={() => setIsOpened(true)}>
                   Add New Todo
                 </Button>
               </AddButtonWrapper>
@@ -149,13 +189,16 @@ export const Home = () => {
                         <CardSection>End Goal - {todo.endGoal}</CardSection>
                       </CardBody>
                       <CardFooterWrapper>
-                        <Button onClick={(todo) => deleteTodo(todo.id)}>Delete</Button>
+                        <Button handleClick={(_) => deleteTodoItem(todo.id)}>Delete</Button>
                       </CardFooterWrapper>
                     </CardWrapper>
                   )
                 })
               }
-            </> :
+              {
+                isDeleting ? <DeleteSpinnerWrapper><DeletingSpinner /></DeleteSpinnerWrapper>: null
+              }
+           </> :
             <NoTodoWrapper>
              <>
                <Card ariaLabelledby='no-todo' ariaDescribedby='no-todo-message'>
@@ -166,7 +209,7 @@ export const Home = () => {
                      <InverseButton
                        ariaLabel='Add Todo Button in Card'
                        ariaDescribedby='no-todo-message'
-                       onClick={() => setIsOpened(true)}
+                       handleClick={() => setIsOpened(true)}
                      >
                        Add Todo
                      </InverseButton>
@@ -174,7 +217,7 @@ export const Home = () => {
                  </CardBody>
                </Card>
                <div id='button-wrapper'>
-                 <Button ariaLabel='Add New Todo' ariaDescribedby='no-todo-message' onClick={() => setIsOpened(true)}>
+                 <Button ariaLabel='Add New Todo' ariaDescribedby='no-todo-message' handleClick={() => setIsOpened(true)}>
                    Add New Todo
                  </Button>
                </div>

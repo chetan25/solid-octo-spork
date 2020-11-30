@@ -8,6 +8,12 @@ module.exports = buildSchema(`
      endGoal: String
      actions: String
    }
+   type DeletedTodoId {
+     id: String!
+   }
+   input TodoId {
+     id: String!
+   }
    input AddTodoData {
      title: String!
      description: String!
@@ -19,6 +25,7 @@ module.exports = buildSchema(`
    }
    type RootMutation {
       addTodo(addTodo: AddTodoData): Todos
+      deleteTodo(deleteTodo: TodoId!): DeletedTodoId
    }
    schema {
       query: RootQuery,

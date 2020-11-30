@@ -57,7 +57,7 @@ const AddTodoModal = ({closeDrawer, addNewTodo, hasError, isProcessing, addSucce
         <div>
           <h2>Add a new Todo</h2>
           <CloseButton>
-            <IconButton onClick={!isProcessing ? closeDrawer : null}>X</IconButton>
+            <IconButton handleClick={!isProcessing ? closeDrawer : null}>X</IconButton>
           </CloseButton>
         </div>
       </DrawerTitle>

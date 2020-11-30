@@ -1,8 +1,10 @@
 import { takeLatest, call, all, put } from 'redux-saga/effects';
 import {
   ADD_TODO, addTodoSuccess, addTodoError,
+  DELETE_TODO,
+  deleteTodoSuccess, deleteTodoError,
   FETCH_TODO, fetchTodoSuccess, fetchTodoError } from './todo-actions';
-import { getTodo, addTodo } from '../../graphql-helpers/helper';
+import { getTodo, addTodo, deleteTodo } from '../../graphql-helpers/helper';
 
 export function* fetchTodosAsync() {
     try {
@@ -25,13 +27,16 @@ function addTodoDummy() {
   setTimeout(() => addTodo({title: 'test', description: 'test'}));
 }
 
-export function* addTodoAsync(payload) {
+function* addTodoAsync(payload) {
   try {
     console.log(payload, 'payload');
     const { payload: newTodo } = payload;
-    const { todo } = yield call(addTodo, newTodo);
-    console.log(todo);
-    yield put(addTodoSuccess());
+    const {addTodo: { id }} = yield call(addTodo, newTodo);
+    const todoAdded = {
+      id: id,
+      ...newTodo
+    };
+    yield put(addTodoSuccess(todoAdded));
   } catch(err) {
     console.log(err);
     yield put(addTodoError());
@@ -45,9 +50,30 @@ export function* addTodoSaga() {
   )
 }
 
+function* deleteTodoAsync(payload) {
+  try {
+    const { payload: todoId } = payload;
+    console.log('fired delete');
+    const deleteTodoItem = yield call(deleteTodo, todoId);
+    console.log(deleteTodoItem, 'deleteTodoItem');
+    yield put(deleteTodoSuccess(todoId));
+  } catch(error) {
+    console.log(error);
+    yield put(deleteTodoError());
+  }
+}
+
+export function* deleteTodoSaga() {
+  yield takeLatest(
+    DELETE_TODO,
+    deleteTodoAsync
+  );
+}
+
 export function* todoSaga() {
     yield all([
         call(fetchTodosSaga),
-       call(addTodoSaga)
+        call(addTodoSaga),
+        call(deleteTodoSaga)
     ]);
 }

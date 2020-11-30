@@ -30,7 +30,6 @@ export const addTodo = (todo: ITodo) => {
     }
   `;
 
-  console.log('fired');
   return new Promise(async (resolve, rej) => {
     const result = await client.request(addTodo, {
       title: todo.title,
@@ -49,4 +48,21 @@ export const addTodo = (todo: ITodo) => {
   //   });
 };
 
+export const deleteTodo = (id: string) => {
+  const deleteTodoMutation = gql`
+    mutation RootMutation($id: String!) {
+       deleteTodo(deleteTodo: { id: $id }) {
+         id
+       }
+    }
+  `;
+
+  return new Promise(async (resolve, rej) => {
+    const result = await client.request(deleteTodoMutation, {id: id});
+
+    setTimeout(() => {
+      return resolve(result);
+    }, 1500);
+  });
+};
 

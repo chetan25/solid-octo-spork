@@ -82,7 +82,7 @@ const AddTodoForm = ({isProcessing, hasError, addNewTodo, addSuccessFull} : AddT
       <SubmitFormButton>
         <Button
           ariaLabel='Submit New Todo Form Data'
-          onClick={addTodo}
+          handleClick={addTodo}
           disabled={isProcessing || hasError}
         >
           Add New Todo

@@ -5,24 +5,24 @@ export interface ButtonProps {
   children: React.ReactNode;
   ariaLabel?: string;
   ariaDescribedby?: string;
-  onClick?: <T>(T) => void;
+  handleClick ?: <T>(T) => void;
   disabled?: boolean;
 }
 
 const Button = (props: ButtonProps) => {
-  const {children, ariaLabel, ariaDescribedby, onClick, disabled } = props;
-  return <ButtonComponent disabled={ disabled } onClick={onClick} aria-label={ariaLabel} aria-describedby={ariaDescribedby}>{children}</ButtonComponent>
+  const {children, ariaLabel, ariaDescribedby, handleClick , disabled } = props;
+  return <ButtonComponent disabled={ disabled } onClick={(d) => handleClick (d)} aria-label={ariaLabel} aria-describedby={ariaDescribedby}>{children}</ButtonComponent>
 };
 
 const InverseButton = (props: ButtonProps) => {
-  const {children, ariaLabel, onClick} = props;
-  return <InverseButtonComponent aria-label={ariaLabel} onClick={onClick}>{children}</InverseButtonComponent>
+  const {children, ariaLabel, handleClick } = props;
+  return <InverseButtonComponent aria-label={ariaLabel} onClick={handleClick }>{children}</InverseButtonComponent>
 };
 
 const IconButton = (props: ButtonProps) => {
-  const {children, ariaLabel, ariaDescribedby, onClick } = props;
+  const {children, ariaLabel, ariaDescribedby, handleClick  } = props;
 
-  return <ButtonIconWrapper onClick={onClick} aria-label={ariaLabel} aria-describedby={ariaDescribedby}>{children}</ButtonIconWrapper>
+  return <ButtonIconWrapper onClick={handleClick} aria-label={ariaLabel} aria-describedby={ariaDescribedby}>{children}</ButtonIconWrapper>
 }
 
 export {

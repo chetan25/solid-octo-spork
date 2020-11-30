@@ -3,7 +3,11 @@ import {
   FETCH_TODO_SUCCESS,
   FETCH_TODO,
   ADD_TODO_SUCCESS,
-  ADD_TODO_ERROR
+  ADD_TODO_ERROR,
+  RESET_FORM_STATE,
+  DELETE_TODO,
+  DELETE_TODO_SUCCESS,
+  DELETE_TODO_ERROR
 } from './todo-actions';
 import { ITodosState } from '../../interfaces/user';
 
@@ -13,6 +17,8 @@ const defaultState: ITodosState = {
     isProcessing: false,
     hasError: false,
     addSuccess: false,
+    isDeleting: false,
+    deleteSuccess: false
 }
 
 export interface IAction {
@@ -25,36 +31,73 @@ const todoReducer = (state: ITodosState = defaultState, action: IAction): ITodos
         case ADD_TODO_SUCCESS:
             return {
                 ...state,
-                isProcessing: false,
+              todos: [...state.todos, action.payload],
+              isProcessing: false,
                 hasError: false,
-                addSuccess: true
+                addSuccess: true,
+                isDeleting: false
             }
         case ADD_TODO_ERROR:
             return {
               ...state,
               isProcessing: false,
               addSuccess: false,
-              hasError: true
+              hasError: true,
+              isDeleting: false
             }
         case ADD_TODO:
             return {
               ...state,
-              todos: [...state.todos, action.payload],
               hasError: false,
               addSuccess: false,
-              isProcessing: true
+              isProcessing: true,
+              isDeleting: false
             }
         case FETCH_TODO:
             return {
                 ...state,
                 isFetching: true,
+              hasError: false,
+              addSuccess: false,
+              isProcessing: false,
+              isDeleting: false
             };
         case FETCH_TODO_SUCCESS:
             return {
+                ...state,
                 todos: action.payload,
                 isFetching: false,
-                hasError: false
+                hasError: false,
+                isDeleting: false
             };
+        case RESET_FORM_STATE:
+          return {
+            ...state,
+            hasError: false,
+            addSuccess: false,
+            isProcessing: false,
+            isDeleting: false
+          }
+        case DELETE_TODO:
+          return {
+            ...state,
+            hasError: false,
+            isProcessing: false,
+            isDeleting: true,
+            deleteSuccess: false
+        }
+        case DELETE_TODO_SUCCESS:
+          const filteredTodos = state.todos.filter(function( todo ) {
+            return todo.id !== action.payload;
+          });
+          return {
+            ...state,
+            todos: filteredTodos,
+            hasError: false,
+            isProcessing: false,
+            isDeleting: false,
+            deleteSuccess: true
+          }
         default:
             return state;
     }

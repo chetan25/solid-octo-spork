@@ -13,6 +13,15 @@ module.exports = {
       endGoal: addTodo.endGoal,
       actions: addTodo.actions
     })
-      .then(res => res.data);
+      .then(res => {
+        return res.data;
+      });
+  },
+  deleteTodo(args, req) {
+    const { deleteTodo: {id} } = args;
+    return axios.delete(`http://localhost:3000/todos/${id}`)
+      .then(res => {
+         return {id: id};
+      });
   }
 }

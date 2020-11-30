@@ -18,7 +18,9 @@ export interface ITodosState {
     isFetching?: boolean;
     hasError?: boolean;
     isProcessing?: boolean;
+    isDeleting?: boolean;
     addSuccess?: boolean;
+    deleteSuccess: boolean;
 }
 
 export interface IStore {
